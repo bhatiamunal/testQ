@@ -1,0 +1,112 @@
+<style>
+    .minHeight {
+        height: 85vh;
+        /* background-color: red; */
+        overflow-y: scroll;
+ 
+       
+        border-radius: 5px;
+    }
+</style>
+<div class="container mt-3 mb-3" *ngIf="!result && Introduction">
+    <div class="card">
+        <div class="card-header">
+          Introduce Yourself
+        </div>
+        <div class="card-body">
+            <form [formGroup]="TestFormUserDetails" (submit)="Start()">
+                <div class="mb-3 mt-3">
+                    <label for="name" class="form-label"> Name : </label>
+                    <input type="text" class="form-control"  placeholder="Enter name" formControlName="Fname" >
+                  </div>
+                  <div class="mb-3 mt-3">
+                    <label for="Email" class="form-label">Email :</label>
+                    <input type="text" class="form-control"  placeholder="Enter Email"  formControlName="Email" >
+                  </div>
+                  <div class="mb-3 mt-3">
+                    <label for="PNumber" class="form-label">Mobile Number   :</label>
+                    <input type="text" class="form-control"  placeholder="Enter Phone Number"  formControlName="PNumber" >
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container mt-3 mb-3" *ngIf="!result && !Introduction">
+
+    <div *ngFor="let user of data.questions; let i = index">
+        <div *ngIf="status==i+1">
+<form  [formGroup]="TestForm" >
+
+
+            <div class="card" style="width: 100%; height: 85vh; ">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-6">
+
+                           <h3> {{data.name}} </h3> 
+                        </div>
+                        <div class="col-5">
+                            Correct :{{ Marks.correct}}
+                            InCorrect :{{ Marks.Incorrect}}
+                        </div>
+                        <div class="col-1">
+                            <button type="button " class="btn btn-dark " (click)="saveTestAns(status)"  style="float: right;" >Submit </button>
+                        </div>
+                    </div>
+                 
+                </div>
+                <div class="card-body" style="overflow-y: scroll; margin: 1%;">
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="form-label">Ques {{i+1}}: {{user.text}}</label>
+                            <div class="form-check" *ngIf="user.type=='text'">
+                                <input type="text" class="form-control" formControlName="{{user.id}}">
+
+                            </div>
+                            <div class="form-check" *ngIf="user.type=='number'">
+                                <input type="number" class="form-control" formControlName="{{user.id}}">
+
+                            </div>
+                            <div class="form-check" *ngIf="user.type=='single-select'">
+                                <div *ngFor="let data of user.options">
+                                    <input type="radio" class="form-check-input"  
+                                    [value]="data"  formControlName="{{user.id}}">
+                                    {{data}}
+                                    <label class="form-check-label" for="radio1"></label>
+                                </div>
+
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-6  "> <button type="button" (click)="checkAns(status)"  [style.visibility]="status==1 ? 'hidden ' : 'visible'" class="btn btn-dark" (click)="ChangeQues(false)">Previous</button> </div>
+                        <div class="col-6 " >
+                            <button type="button " class="btn btn-dark " (click)="checkAns(status)" [style.visibility]="totalQues!=i+1 ? 'visible' : 'hidden'" style="float: right;" (click)="ChangeQues(true)">Next </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+        </div>
+
+    </div>
+</div>
+
+<div class="container mt-3 mb-3" *ngIf="result && !Introduction">
+    <div class="card">
+        <div class="card-header">
+            
+            Result  of {{ TestFormUserDetails.value.Fname | uppercase }}  
+        </div>
+        <div class="card-body">
+          <p class="card-text"> <b> Correct :</b> {{Marks.correct }}  </p>
+          <p class="card-text"> <b> Incorrect :</b> {{Marks.Incorrect }} </p>
+          <a (click)="result=true" class="btn btn-primary">Retake</a>
+        </div>
+    </div>
+</div>
